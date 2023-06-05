@@ -1,19 +1,19 @@
 part of 'create_post_bloc.dart';
 
-enum AddingStatus { initial, success, failure }
+enum CreatePostStatus { initial, success, failure }
 
 class CreatePostState extends Equatable {
   const CreatePostState({
-    this.status = AddingStatus.initial,
+    this.status = CreatePostStatus.initial,
     this.newPost,
   
   });
 
-  final AddingStatus status;
+  final CreatePostStatus status;
   final PostEntity? newPost;
 
   CreatePostState copyWith({
-    AddingStatus? status,
+    CreatePostStatus? status,
     PostEntity? newPost,
   }) {
     return CreatePostState(
@@ -28,7 +28,12 @@ class CreatePostState extends Equatable {
 
 class CreatePostLoadingState extends CreatePostState{}
 
-class CreatePostSuccessState extends CreatePostState{}
+class CreatePostSuccessState extends CreatePostState{
+   final PostEntity? newPost;
+   const CreatePostSuccessState({
+    this.newPost,
+   });
+}
 
 class CreatePostErrorState extends CreatePostState{
   final String message;

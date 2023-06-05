@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:socail_medial_app/src/features/home/presentation/pages/home_page.dart';
 import 'package:socail_medial_app/src/features/login/presentation/bloc/login_bloc.dart';
 import 'package:socail_medial_app/src/features/login/presentation/pages/login_page.dart';
 import 'package:socail_medial_app/src/features/post/presentation/create_post/bloc/create_post_bloc.dart';
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home:  PostPage(),
+        home:  HomePage(),
       ),
     );
   }

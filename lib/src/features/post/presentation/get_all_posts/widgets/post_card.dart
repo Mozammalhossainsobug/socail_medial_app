@@ -19,7 +19,7 @@ class PostCard extends StatelessWidget {
           child: Text(index.toString()),
         ),
         title: Text(postEntity.title),
-        subtitle: Text(postEntity.title),
+        subtitle: Text(postEntity.body),
       ),
     );
   }

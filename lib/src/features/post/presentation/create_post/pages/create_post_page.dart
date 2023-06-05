@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socail_medial_app/src/features/post/presentation/create_post/bloc/create_post_bloc.dart';
+import 'package:socail_medial_app/src/features/post/presentation/create_post/bloc/create_post_event.dart';
+import 'package:socail_medial_app/src/features/post/presentation/get_all_posts/bloc/post_bloc.dart';
 import 'package:socail_medial_app/src/features/post/root/domain/entities/post_entity.dart';
 
 class CreatePostPage extends StatelessWidget {
@@ -23,12 +25,17 @@ class CreatePostPage extends StatelessWidget {
           if (state is CreatePostErrorState) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text(state.message)));
+            Navigator.pop(context);
           }
           if (state is CreatePostSuccessState) {
+            context
+                .read<CreatePostBloc>()
+                .add(CreatedPostEvent(newPost: state.newPost!));
+
             ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Post successfully created')));
-            _titleController.clear();
-            _bodyController.clear();
+            // _titleController.clear();
+            // _bodyController.clear();
             Navigator.pop(context);
           }
         },
@@ -83,14 +90,27 @@ class CreatePostPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 20.0),
                   Center(
-                    // This will center the button.
                     child: ElevatedButton(
                       onPressed: () {
-                        if(_formKey.currentState!.validate()){
-                          final newPost = PostEntity(userId: 1, id: 1, title: _titleController.text, body: _bodyController.text);
-                          BlocProvider.of<CreatePostBloc>(context).add(AddPostEvent(
+                        if (_formKey.currentState!.validate()) {
+                          final newPost = PostEntity(
+                              userId: 1,
+                              id: 1,
+                              title: _titleController.text,
+                              body: _bodyController.text,
+                              
+                              );
+
+                         // print(newPost.body);
+                         
+                          BlocProvider.of<PostBloc>(context).add(PostAddedEvent(
                             newPost: newPost,
                           ));
+                          BlocProvider.of<CreatePostBloc>(context)
+                              .add(CreatedPostEvent(
+                            newPost: newPost,
+                          ));
+                          
                         }
                       },
                       child: state is CreatePostLoadingState

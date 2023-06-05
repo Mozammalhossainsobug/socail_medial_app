@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:socail_medial_app/src/features/post/presentation/create_post/bloc/create_post_bloc.dart';
 import 'package:socail_medial_app/src/features/post/presentation/create_post/pages/create_post_page.dart';
 import 'package:socail_medial_app/src/features/post/presentation/get_all_posts/bloc/post_bloc.dart';
 import 'package:socail_medial_app/src/features/post/presentation/get_all_posts/widgets/post_card.dart';
-import 'package:socail_medial_app/src/features/post/root/domain/entities/post_entity.dart';
 
 class PostPage extends StatefulWidget {
   const PostPage({Key? key}) : super(key: key);
@@ -13,10 +13,22 @@ class PostPage extends StatefulWidget {
 }
 
 class _PostPageState extends State<PostPage> {
+  late PostBloc _postBloc;
+  late CreatePostBloc _createPostBloc;
+
   @override
   void initState() {
     super.initState();
-    context.read<PostBloc>().add(PostFetchedEvent());
+    _postBloc = context.read<PostBloc>();
+    _createPostBloc = context.read<CreatePostBloc>();
+    _postBloc.add(PostFetchedEvent());
+  }
+
+  @override
+  void dispose() {
+    _postBloc.close();
+    _createPostBloc.close();
+    super.dispose();
   }
 
   @override
@@ -25,43 +37,38 @@ class _PostPageState extends State<PostPage> {
       appBar: AppBar(
         title: const Text('Post'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: BlocBuilder<PostBloc, PostState>(
-          buildWhen: (previous, current) => previous != current,
-          builder: (context, state) {
-            switch (state.status) {
-              case PostStatus.initial:
-                return const Center(child: CircularProgressIndicator());
-
-              case PostStatus.success:
-                return state.posts.isNotEmpty ? ListView.builder(
-                  itemCount: state.posts.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    PostEntity postEntity = state.posts[index];
-                    return PostCard(
-                      index: index + 1,
-                      postEntity: postEntity,
-                    );
-                  },
-                ) : const Center(
-                  child: Text('No data found in server'),
-                );
-
-              case PostStatus.failure:
-                return Center(child: Text(state.errorMessage));
-            }
-          },
-        ),
-        
+      body:  BlocConsumer<PostBloc, PostState>(
+        listener: (context, state) {
+          if (state.status == PostStatus.failure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.errorMessage),
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state.status == PostStatus.initial) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state.status == PostStatus.success) {
+            return ListView.builder(
+              itemCount: state.posts.length,
+              itemBuilder: (context, index) {
+                final post = state.posts[index];
+                return PostCard(index :index+1, postEntity: post);
+              },
+            );
+          } else {
+            return const Center(child: Text('Failed to load posts'));
+          }
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-           Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CreatePostPage()), // Navigate to CreatePostPage when button pressed
-            );
-
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CreatePostPage()),
+          );
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.blue,

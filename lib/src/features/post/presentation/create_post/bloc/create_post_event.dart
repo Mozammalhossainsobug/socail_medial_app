@@ -1,12 +1,23 @@
-part of 'create_post_bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:socail_medial_app/src/features/post/root/domain/entities/post_entity.dart';
 
-abstract class CreatePostEvent{}
 
-class AddPostEvent extends CreatePostEvent {
-  PostEntity newPost;
+class CreatePostEvent  extends Equatable {
+  const CreatePostEvent();
+  
+  @override
+  List<Object?> get props => [];
+}
 
-  AddPostEvent({
+
+class CreatedPostEvent extends CreatePostEvent {
+  final PostEntity newPost;
+
+  const CreatedPostEvent({
     required this.newPost,
   });
+    @override
+  List<Object> get props => [newPost];
+
 }
 
