@@ -32,9 +32,10 @@ class PostRemoteDataSourceImp implements PostRemoteDataSource {
   Future<http.Response> getAllPosts() async {
     var client = http.Client();
     var response = await client.get(
-      Uri.parse(
-        'https://jsonplaceholder.typicode.com/posts',
+            Uri.parse(
+        'https://jsonplaceholder.typicode.com/posts?_limit=5',
       ),
+
     );
 
     return response;

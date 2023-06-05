@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socail_medial_app/src/features/post/root/domain/entities/post_entity.dart';
@@ -7,11 +9,12 @@ part 'create_post_event.dart';
 part 'create_post_state.dart';
 
 class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
-  CreatePostBloc({required this.createPost}) : super(CreatePostState()) {
+  CreatePostBloc({required this.createPost}) : super(const CreatePostState()) {
     on<AddPostEvent>(_onAddPostEvent);
   }
 
   final CreatePosts createPost;
+
 
   Future<void> _onAddPostEvent(
     AddPostEvent event,
@@ -19,12 +22,9 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
   ) async {
     emit(const CreatePostState());
     try {
-      final post = PostEntity(id: event.id, title: event.title, body: event.body, userId: event.userId);
-
-      if(post.body == '' || post.title == ''){
-        throw('Invalid parameters. All parameters must be non-null.');
-      }
+      final PostEntity post = event.newPost;
       final response = await createPost.call(post);
+
 
       response.fold(
         (failure) => emit(CreatePostErrorState(message: failure.toString())),
