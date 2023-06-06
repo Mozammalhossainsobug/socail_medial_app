@@ -37,9 +37,9 @@ class CreatePostSuccessState extends CreatePostState{
 }
 
 class CreatePostErrorState extends CreatePostState{
-  final String message;
+  final String errorMessage;
   const CreatePostErrorState({
-    required this.message,
+    required this.errorMessage,
   });
 
 }

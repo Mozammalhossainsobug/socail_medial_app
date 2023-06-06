@@ -24,7 +24,7 @@ class CreatePostPage extends StatelessWidget {
         listener: (context, state) {
           if (state is CreatePostErrorState) {
             ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(state.message)));
+                .showSnackBar(SnackBar(content: Text(state.errorMessage)));
             Navigator.pop(context);
           }
           if (state is CreatePostSuccessState) {

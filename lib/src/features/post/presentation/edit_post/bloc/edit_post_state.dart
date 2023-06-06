@@ -23,7 +23,7 @@ class EditPostState extends Equatable {
   }) {
     return EditPostState(
       status: status ?? this.status,
-      editablePost: editablePost ?? editablePost,
+      editablePost: editablePost ?? this.editablePost,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
@@ -31,9 +31,3 @@ class EditPostState extends Equatable {
   List<Object?> get props => [status, editablePost, errorMessage];
 
 }
-
-
-class EditPostSuccessfulState extends EditPostState {}
-
-
-class EditPostFailureState extends EditPostState {}

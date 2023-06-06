@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socail_medial_app/src/features/post/presentation/edit_post/bloc/edit_post_bloc.dart';
 import 'package:socail_medial_app/src/features/post/presentation/edit_post/bloc/edit_post_event.dart';
+import 'package:socail_medial_app/src/features/post/presentation/edit_post/bloc/edit_post_state.dart';
+import 'package:socail_medial_app/src/features/post/presentation/get_all_posts/bloc/post_bloc.dart';
 import 'package:socail_medial_app/src/features/post/root/domain/entities/post_entity.dart';
 
 class EditPostPage extends StatefulWidget {
   final PostEntity editablePost;
-  const EditPostPage({super.key, required this.editablePost});
+  const EditPostPage({Key? key, required this.editablePost}) : super(key: key);
 
   @override
   State<EditPostPage> createState() => _EditPostPageState();
@@ -29,7 +31,28 @@ class _EditPostPageState extends State<EditPostPage> {
       appBar: AppBar(
         title: const Text('Edit Post'),
       ),
-      body: Padding(
+      body: BlocConsumer<EditPostBloc, EditPostState>(
+        listener: (context, state) {
+           if (state.status == EditPostStateStatus.success) {
+           // print('came here editpost success');
+            context.read<PostBloc>().add(PostEditedEvent(editedPost: state.editablePost!));
+           Navigator.pop(context);
+          } 
+          else if (state.status == EditPostStateStatus.failure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.errorMessage),
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state.status == EditPostStateStatus.loading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
@@ -58,16 +81,18 @@ class _EditPostPageState extends State<EditPostPage> {
                       title: title,
                       body: body,
                     );
+                    BlocProvider.of<EditPostBloc>(context).add(EditedEvent(editedPost));
 
-                    BlocProvider.of<EditPostBloc>(context)
-                         .add(EditedEvent(editedPost));
-                    Navigator.pop(context);
+                  // Navigator.pop(context);
+                 // print("came to button pressed");
                   },
                   child: const Text('Edit Post'),
                 ),
               ],
             ),
-          ),
+          );
+        },
+      ),
     );
   }
 }

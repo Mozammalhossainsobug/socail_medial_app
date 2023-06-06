@@ -20,7 +20,9 @@ class PostCreatedEvent extends PostEvent {
 
 class PostEditedEvent extends PostEvent {
   final PostEntity editedPost;
+
   const PostEditedEvent({required this.editedPost});
+
  @override
   List<Object?> get props => [editedPost];
 }

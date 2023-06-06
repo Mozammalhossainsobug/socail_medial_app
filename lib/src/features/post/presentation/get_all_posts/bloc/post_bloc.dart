@@ -84,6 +84,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       final updatedPosts = List<PostEntity>.from(state.posts);
 
       updatedPosts[editedPost.id - 1] = editedPost;
+
+      print('changd in post_bloc');
       
       emit(
         state.copyWith(

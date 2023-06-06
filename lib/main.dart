@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => LoginBloc()),
         BlocProvider(create: (_) => PostBloc(getAllPosts: GetAllPosts())),
         BlocProvider(create: (_) => CreatePostBloc(createPostUseCase: CreatePostUseCase() )),
-        BlocProvider(create: (context) => EditPostBloc(editPostUseCase: EditPostsUseCase()),),
+        BlocProvider(create: (_) => EditPostBloc(editPostUseCase: EditPostsUseCase()),),
       ],
       child: MaterialApp(
         title: 'Social Media',
