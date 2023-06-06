@@ -18,8 +18,8 @@ class EditPostState extends Equatable {
 
   EditPostState copyWith({
     EditPostStateStatus? status,
-    PostEntity? post,
-    String? errorMessage,
+    String? errorMessage, 
+    PostEntity? editablePost,
   }) {
     return EditPostState(
       status: status ?? this.status,

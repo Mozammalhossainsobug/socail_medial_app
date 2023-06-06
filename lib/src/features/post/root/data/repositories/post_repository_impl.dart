@@ -58,6 +58,7 @@ class PostRepositoryIml implements PostRepository{
       final Response response = await postRemoteDataSource.updatePost(post);
 
       if (response.statusCode == 200) {
+        print(post.body);
         return Right(post);
       } else {
         throw ("this is error");

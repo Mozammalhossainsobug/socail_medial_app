@@ -13,13 +13,14 @@ class EditPostBloc extends Bloc<EditPostEvent, EditPostState> {
     on<EditedEvent>(_onEditedEvent);
   }
 
-  FutureOr<void> _onEditedEvent(
+  Future<void> _onEditedEvent(
     EditedEvent event,
     Emitter<EditPostState> emit,
   ) async {
     try {
       final PostEntity editedPost = event.editablePost;
       final response = await editPostUseCase.call(editedPost);
+
       response.fold(
         (l) => emit(
           state.copyWith(
@@ -27,15 +28,12 @@ class EditPostBloc extends Bloc<EditPostEvent, EditPostState> {
             errorMessage: l.toString(),
           ),
         ),
-        (r) {
-          print("success from edit post bloc");
-          emit(
-            state.copyWith(
-              status: EditPostStateStatus.success,
-              post: r,
-            ),
-          );
-        },
+        (r) => emit(
+          state.copyWith(
+            status: EditPostStateStatus.success,
+            editablePost: r,
+          ),
+        ),
       );
     } catch (e) {
       emit(EditPostState(errorMessage: e.toString()));

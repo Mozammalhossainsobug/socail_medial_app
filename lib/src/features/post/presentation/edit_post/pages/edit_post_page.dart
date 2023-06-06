@@ -34,7 +34,6 @@ class _EditPostPageState extends State<EditPostPage> {
       body: BlocConsumer<EditPostBloc, EditPostState>(
         listener: (context, state) {
            if (state.status == EditPostStateStatus.success) {
-           // print('came here editpost success');
             context.read<PostBloc>().add(PostEditedEvent(editedPost: state.editablePost!));
            Navigator.pop(context);
           } 
@@ -82,9 +81,6 @@ class _EditPostPageState extends State<EditPostPage> {
                       body: body,
                     );
                     BlocProvider.of<EditPostBloc>(context).add(EditedEvent(editedPost));
-
-                  // Navigator.pop(context);
-                 // print("came to button pressed");
                   },
                   child: const Text('Edit Post'),
                 ),
