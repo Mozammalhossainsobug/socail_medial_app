@@ -21,9 +21,9 @@ class PostRepositoryIml implements PostRepository{
           .toList();
 
       return Right(models);
-    } catch (e, stackTrace) {
-      print(e.toString());
-      print(stackTrace.toString());
+    } catch (e) {
+      //print(e.toString());
+     // print(stackTrace.toString());
 
       return Left((e.toString()));
     }
@@ -40,8 +40,8 @@ class PostRepositoryIml implements PostRepository{
       } else {
         throw ("this is error");
       }
-    } catch (e, stackTrace) {
-      print(stackTrace.toString());
+    } catch (e) {
+     // print(stackTrace.toString());
       return Left((e.toString()));
     }
   }
@@ -53,8 +53,17 @@ class PostRepositoryIml implements PostRepository{
   }
 
   @override
-  Future<Either<String, PostEntity>> updatePosts(PostEntity post) {
-    // TODO: implement updatePosts
-    throw UnimplementedError();
+  Future<Either<String, PostEntity>> updatePosts(PostEntity post) async{
+    try {
+      final Response response = await postRemoteDataSource.updatePost(post);
+
+      if (response.statusCode == 200) {
+        return Right(post);
+      } else {
+        throw ("this is error");
+      }
+    } catch (e) {
+      return Left((e.toString()));
+    }
   }
-}
+  }

@@ -9,7 +9,6 @@ class CreatePostEvent  extends Equatable {
   List<Object?> get props => [];
 }
 
-
 class CreatedPostEvent extends CreatePostEvent {
   final PostEntity newPost;
 
@@ -18,6 +17,5 @@ class CreatedPostEvent extends CreatePostEvent {
   });
     @override
   List<Object> get props => [newPost];
-
 }
 

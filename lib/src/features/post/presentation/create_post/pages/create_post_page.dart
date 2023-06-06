@@ -28,14 +28,12 @@ class CreatePostPage extends StatelessWidget {
             Navigator.pop(context);
           }
           if (state is CreatePostSuccessState) {
-            context
-                .read<CreatePostBloc>()
-                .add(CreatedPostEvent(newPost: state.newPost!));
+            context.read<PostBloc>().add(PostCreatedEvent(newPost: state.newPost!));
 
             ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Post successfully created')));
-            // _titleController.clear();
-            // _bodyController.clear();
+             _titleController.clear();
+             _bodyController.clear();
             Navigator.pop(context);
           }
         },
@@ -98,18 +96,9 @@ class CreatePostPage extends StatelessWidget {
                               id: 1,
                               title: _titleController.text,
                               body: _bodyController.text,
-                              
                               );
-
                          // print(newPost.body);
-                         
-                          BlocProvider.of<PostBloc>(context).add(PostAddedEvent(
-                            newPost: newPost,
-                          ));
-                          BlocProvider.of<CreatePostBloc>(context)
-                              .add(CreatedPostEvent(
-                            newPost: newPost,
-                          ));
+                          BlocProvider.of<CreatePostBloc>(context).add(CreatedPostEvent(newPost: newPost,));
                           
                         }
                       },

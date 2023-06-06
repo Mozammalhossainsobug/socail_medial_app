@@ -6,11 +6,12 @@ class CreatePostState extends Equatable {
   const CreatePostState({
     this.status = CreatePostStatus.initial,
     this.newPost,
-  
+    this.message,
   });
 
   final CreatePostStatus status;
   final PostEntity? newPost;
+  final String? message;
 
   CreatePostState copyWith({
     CreatePostStatus? status,

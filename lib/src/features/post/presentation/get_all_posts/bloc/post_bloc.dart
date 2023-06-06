@@ -12,7 +12,8 @@ part 'post_state.dart';
 class PostBloc extends Bloc<PostEvent, PostState> {
   PostBloc({required this.getAllPosts}) : super(const PostState()) {
     on<PostFetchedEvent>(_onPostFetchedEvent);
-    on<PostAddedEvent>(_onPostAddedEvent);
+    on<PostCreatedEvent>(_onPostAddedEvent);
+    on<PostEditedEvent>(_onPostEditedEvent);
   }
 
   final GetAllPosts getAllPosts;
@@ -50,10 +51,10 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   }
 
   FutureOr<void> _onPostAddedEvent(
-    PostAddedEvent event, 
+    PostCreatedEvent event,
     Emitter<PostState> emit,
-  ) async{
-    try{
+  ) async {
+    try {
       final newPost = event.newPost;
       final updatedPosts = List<PostEntity>.from(state.posts);
       updatedPosts.insert(0, newPost);
@@ -63,7 +64,34 @@ class PostBloc extends Bloc<PostEvent, PostState> {
           status: PostStatus.success,
           posts: updatedPosts,
         ),
-         );
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          status: PostStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
+    }
+  }
+
+  FutureOr<void> _onPostEditedEvent(
+    PostEditedEvent event,
+    Emitter<PostState> emit,
+  ) async {
+    try {
+      final editedPost = event.editedPost;
+      final updatedPosts = List<PostEntity>.from(state.posts);
+
+      updatedPosts[editedPost.id - 1] = editedPost;
+      
+      emit(
+        state.copyWith(
+          status: PostStatus.success,
+          posts: updatedPosts,
+        ),
+      );
+      
     } catch (e) {
       emit(
         state.copyWith(
